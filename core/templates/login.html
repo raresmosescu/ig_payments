@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <section class="section">
+    <div class="container">
+      <div class="centered-container">
+        <div id="login-status"></div>
+      </div>
+      <div class="centered-container box">
+        <div class="controller" id="login">
+            <div class="field">
+            <label class="label">Email</label>
+            <input class="input" id="email" type="email" placeholder="e.g. alex@example.com">
+            </div>
+            <div class="field">
+            <label class="label">Password</label>
+            <input class="input" id="password" type="password" placeholder="*********">
+            </div>
+            <div>
+            <button class="button" disabled onclick="userLogin();">Submit</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+{% endblock %}
