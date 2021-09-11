@@ -6,21 +6,21 @@
       <div class="centered-container">
         <div id="login-status"></div>
       </div>
-      <div class="centered-container box">
+      <form class="centered-container box" action="{% url 'login' %}" method="POST"> {% csrf_token %}
         <div class="controller" id="login">
             <div class="field">
-            <label class="label">Email</label>
-            <input class="input" id="email" type="email" placeholder="e.g. alex@example.com">
+            <label class="label">Username</label>
+            <input class="input" id="username" type="text" maxlength="15" name="username" placeholder="alex43" required>
             </div>
             <div class="field">
             <label class="label">Password</label>
-            <input class="input" id="password" type="password" placeholder="*********">
+            <input class="input" id="password" name="password" type="password" placeholder="*********">
             </div>
             <div>
-            <button class="button" disabled onclick="userLogin();">Submit</button>
+            <button class="button" type="submit">Submit</button>
             </div>
         </div>
-      </div>
+    </form>
     </div>
   </section>
 

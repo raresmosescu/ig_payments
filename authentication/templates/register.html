@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block body %}
+
+  <section class="section">
+    <div class="container">
+      <div class="centered-container">
+        <div id="login-status"></div>
+      </div>
+      <form class="centered-container box" action="{% url 'register' %}" method="POST"> {% csrf_token %}
+        <div class="controller" id="login">
+          <div class="field">
+            <label class="label">Username</label>
+            <input class="input" id="username" type="text" maxlength="15" name="username" placeholder="e.g. alex43" pattern="^[a-zA-Z0-9_]*$" required>
+            <p class="help is-black">Use only letters, numbers and underscores ( _ ). This will be visible to others.</p>
+          </div>
+          <div class="field">
+            <label class="label">Email</label>
+            <input class="input" id="email" type="email" name="email" placeholder="e.g. alex@example.com" required>
+            </div>
+            <div class="field">
+            <label class="label">Password</label>
+            <input class="input" id="password" name="password" type="password" placeholder="*********" oninput="check_password();" pattern=".{8,}" required title="8 characters minimum" maxlength="30">
+            </div>
+            <div class="field">
+            <label class="label">Re-type password</label>
+            <input class="input" id="password2" name="password2" type="password" placeholder="*********" oninput="check_password();" pattern=".{8,}" required title="8 characters minimum" maxlength="30">
+            <p id="password-match-fail" class="help is-danger" style="display: none">Passwords don't match</p>
+            <p id="password-match-success" class="help is-success" style="display: none">Passwords match</p>
+            </div>
+            <div>
+            <button id="submit-button" class="button" type="submit">Submit</button>
+            </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+<script src="{% static 'authentication/auth_control.js' %}"></script>
+
+{% endblock %}
