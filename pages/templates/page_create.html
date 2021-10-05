@@ -3,22 +3,22 @@
 {% block body %}
   <section class="section">
     <div class="container">
-      <div class="centered-container">
-        <div id="login-status"></div>
-      </div>
-      <form class="centered-container box" action="{{request.get_full_path}}" method="POST"> {% csrf_token %}
+      <form class="centered-container box" action="{% url 'page_create' %}" method="POST"> {% csrf_token %}
         <div class="controller" id="login">
+
             <div class="field">
-            <label class="label">Username</label>
+            <label class="label">Page handle</label>
+            <input class="input" id="username" type="text" maxlength="15" name="username" placeholder="alex43" required>
+            <span class="help is-black">Use your IG page username (we will verify that you own it)</span>
+            </div>
+
+            <div class="field">
+            <label class="label">Send to (username)</label>
             <input class="input" id="username" type="text" maxlength="15" name="username" placeholder="alex43" required>
             </div>
-            <div class="field">
-            <label class="label">Password</label>
-            <input class="input" id="password" name="password" type="password" placeholder="*********">
-            </div>
+
             <div>
             <button class="button" type="submit">Submit</button>
-            <span class="help">No account? <a href="{% url 'register' %}">Register here.</a></span>
             </div>
         </div>
     </form>

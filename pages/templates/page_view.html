@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load utility_filters %}
+{% load static %}
+
+{% block body %}
+  <section class="section">
+    <div class="container">
+    <form class="centered-container-l box" action="" method="POST"> {% csrf_token %}
+        <div class="box-contents">
+            <!-- <div class="controller" id="login">
+                <div class="field">
+                <label class="label">Send to (username)</label>
+                <input class="input" id="username" type="text" maxlength="15" name="username" placeholder="alex43" required>
+                </div>
+                <div>
+                <button class="button" type="submit">Submit</button>
+                </div>
+            </div> -->
+            <div>
+            <p id="page-username" class="title is-3 mb-2"><a href="https://www.instagram.com/{{ page.username }}">{{page.username}}
+                <i class="fa fa-link"></i>
+            </a>
+            </p>
+            
+            {% if page.is_verified %}
+                <span style = "color: rgb(16, 96, 216);">
+                    <i class="fa fa-check-square"></i><span> Ownership Verified</span>
+                </span>
+            {% else %}
+                <span style = "color: #555555;">
+                    <i class="fa fa-clock-o"></i><span> Page pending verification</span>
+                </span>
+            {% endif %}
+            </div>
+            <hr>
+
+            <p class="title is-3 is-black">Order a promo</p>
+            <div class="field">
+                <p class="title is-5 mb-0"><i class="fa fa-chevron-right"></i> Promotion Type</p>
+                <span>What is the goal of your promotion?</span>
+                <div class="switch-logic mt-4">
+                    <span id = "growth-package-switch" class="custom-switch-option clickable tag is-rounded is-outlined is-large" value="growth">Growth</span> 
+                    <span id = "sales-package-switch" class="custom-switch-option clickable tag is-rounded is-outlined is-large" value="sales">Sales</span>
+                    <span id = "custom-package-switch" class="custom-switch-option clickable tag is-rounded is-outlined is-large" value="custom">Custom</span>
+                    <input id= "package-switch-output" class="custom-switch-output" type="hidden" name="package-type">
+                </div>  
+            </div>
+            
+            <hr>
+
+            <div id = "growth-package" style="display: none;" class="field">
+                <p class="title is-5 mb-0"><i class="fa fa-chevron-right"></i> Growth Package Options</p>
+                <p class = "promo-type-describe mb-4">Best options if you're looking to grow a following.</p>
+                {% for o in growth_options %}
+                    {% if forloop.counter0|modulo:3 == 0 %}
+                    <div class="columns">
+                    {% endif%}
+                        <div class="column is-one-third">
+                            <a>
+                                <div class="box promo-option">
+                                    <div >
+                                        <p class="is-size-5">Posts: <span class="has-text-link"><strong>{{o.posts_amount}}</strong></span></p>
+                                        {% if o.discount %}
+                                            <p>Price: <strong>{{ o.price_per_post | divide:o.posts_amount | discount:o.discount | round_float:2 }} USD</strong></p>
+                                            <p>Discount: <strong>{{o.discount|multiply:100|to_int}}% OFF</strong></p>
+                                            <p>Savings: <strong>{{o.price_per_post | divide:o.posts_amount | multiply:o.discount | round_float:2}} USD</strong></p>
+                                        {% else%}
+                                            <p>Price: <strong>{{ o.price_per_post | divide:o.posts_amount | round_float:2 }} USD</strong></p>
+                                            <p>Discount: <strong>none</strong></p>
+                                            <p>Savings: <strong>none</strong></p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    <!-- Kinda retarded implementation but works well for now -->
+                    {% if forloop.counter0|minus:2|modulo:3 == 0 %}
+                        </div>
+                    {% else %}
+                        {% if forloop.counter0 == growth_options|count|minus:1 %}
+                            <!-- If there are 1,2 or 4,5 .. package options, the last closing div won't generate because modulo won't be true
+                            For modulo to return true, it has to get numbers divisible by 3
+                            So, to fix this, I added another if that checks if it's the last element in the set
+                            If it is the last and because modulo is false (this is an else) it will add the final closing div -->
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div id = "sales-package" style="display: none;" class="field">
+                <p class="title is-5 mb-0"><i class="fa fa-chevron-right"></i> Sales Package Options</p>
+                <p class = "promo-type-describe mb-4">Best options if you want to generate clicks and sales.</p>
+                {% for o in sales_options %}
+                    {% if forloop.counter0|modulo:3 == 0 %}
+                    <div class="columns">
+                    {% endif%}
+                        <div class="column is-one-third">
+                            <a>
+                                <div class="box promo-option">
+                                    <div >
+                                        <p class="is-size-5">Posts: <span class="has-text-link"><strong>{{o.posts_amount}}</strong></span></p>
+                                        {% if o.discount %}
+                                            <p>Price: <strong>{{ o.price_per_post | divide:o.posts_amount | discount:o.discount | round_float:2 }} USD</strong></p>
+                                            <p>Discount: <strong>{{o.discount|multiply:100|to_int}}% OFF</strong></p>
+                                            <p>Savings: <strong>{{o.price_per_post | divide:o.posts_amount | multiply:o.discount | round_float:2}} USD</strong></p>
+                                        {% else%}
+                                            <p>Price: <strong>{{ o.price_per_post | divide:o.posts_amount | round_float:2 }} USD</strong></p>
+                                            <p>Discount: <strong>none</strong></p>
+                                            <p>Savings: <strong>none</strong></p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    <!-- Kinda retarded implementation but works well for now -->
+                    <!-- Basically it adds a closing div every 3 elements and at the end of the set -->
+                    {% if forloop.counter0|minus:2|modulo:3 == 0 %}
+                        </div>
+                    {% else %}
+                        {% if forloop.counter0 == sales_options|count|minus:1 %}
+                            <!-- If there are 1,2 or 4,5 .. package options, the last closing div won't generate because modulo won't be true
+                            For modulo to return true, it has to get numbers divisible by 3
+                            So, to fix this, I added another if that checks if it's the last element in the set
+                            If it is the last and because modulo is false (this is an else) it will add the final closing div -->
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div id = "custom-package" style="display: none;" class="field">
+                <p class="title is-5 mb-0"><i class="fa fa-chevron-right"></i> Custom Package</p>
+                <p class = "promo-type-describe mb-4">If your campaign doesn't fit in the other types, you can make a custom request.</p>
+                <p><strong>Coming soon...</strong></p>
+            </div>
+        </div>
+    </form> 
+
+    </div>
+  </section>
+
+  <script src="{% static 'pages/switch_logic.js' %}"></script>
+  <script src="{% static 'pages/page_view.js' %}"></script>
+
+{% endblock %}

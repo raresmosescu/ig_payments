@@ -18,6 +18,8 @@ from django.urls import path, include
 # from login.views import login 
 from core.views import home, profile
 from authentication.views import login_django, register_django, logout_django
+from payments.views import payment
+from pages.views import page_create, page_view
 
 urlpatterns = [
     path('', home, name='home'),
@@ -26,4 +28,7 @@ urlpatterns = [
     path('logout/', logout_django, name='logout'),
     path('register/', register_django, name='register'),
     path('profile/', profile, name='profile'),
+    path('payment/', payment, name='payment'),
+    path('page/create/', page_create, name='page_create'),
+    path('page/view/', page_view, name='page_view'),
 ]

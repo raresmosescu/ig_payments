@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-
+from django.contrib.auth.decorators import login_required
+from .decorators import unauthenticated_user
 
 def logout_django(request):
-    logout(request)
-    return render(request, 'login.html')
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('login')
 
+@unauthenticated_user
 def login_django(request):
     if request.method == "POST":
         # Login user if the form has been submitted
@@ -15,12 +18,15 @@ def login_django(request):
         username = request.POST.get('username')
         try:
             # if there is no error then signin the user with given email and password
-            print(username, password)
+            # print(username, password)
             user = authenticate(username=username, password=password)
             if user is not None:
                 # A backend authenticated the credentials
                 login(request, user)
-                return redirect('home')
+                if "next=" in request.get_full_path():
+                    return redirect(request.GET.get('next'))
+                else:
+                    return redirect('home')
             else:
                 # No backend authenticated the credentials
                 return HttpResponse("Invalid credentials. Please try again.")
@@ -30,7 +36,7 @@ def login_django(request):
         # Show login page if it's a GET response
         return render(request, "login.html")
 
-
+@unauthenticated_user
 def register_django(request):
     if request.method == "POST":
         # Login user if the form has been submitted

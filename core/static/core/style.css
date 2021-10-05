@@ -1,3 +1,9 @@
+/* Bulma Overwrite */
+
+
+
+
+
 /* Containers */
 /* Details: ... */
 
@@ -7,8 +13,14 @@
     margin-top: 50px;
 }
 
+.centered-container-l {
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-top: 50px;
+}
+
 @media screen and (max-width: 1024px){
-    .centered-container {
+    .centered-container, .centered-container-l {
         margin-left: unset;
         margin-right: unset;
         margin-top: unset;
@@ -17,4 +29,63 @@
 }
 
 
-/*  */
+/* switch_logic.js style */
+.clickable {
+	cursor: pointer;
+}
+
+
+/* page_view style */
+#page-username > a {
+    color: black;
+}
+
+#page-username > a:hover {
+    color: rgb(68, 68, 68);
+}
+
+.box.promo-option {
+    border-color: rgb(221, 221, 221);
+    border-width: 1px;
+    border-style: solid;
+}
+
+.box.promo-option:hover {
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.centered-container-l.box {
+    border-color: rgb(221, 221, 221);
+    border-width: 1px;
+    border-style: solid;
+}
+
+.box-contents {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 1024px){
+    .box-contents {
+        margin-left: unset;
+        margin-right: unset;
+        margin-top: unset;
+        margin-bottom: unset;
+    }
+
+    form.box, .centered-container-l.box {
+        background-color: white;
+        border-radius: 0px;
+        border: none;
+        border-style: none;
+        box-shadow: none;
+        color: #4a4a4a;
+        display: block;
+        padding: 0px;
+    }
+    
+}
