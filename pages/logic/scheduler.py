@@ -1,4 +1,4 @@
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timedelta
 
 # handles scheduled times
 class Day():
@@ -50,5 +50,23 @@ rule = GeneratorRule(posts_per_day=2, day_offset=1)
 cal = Calendar()
 cal.add_many([date(2021, 10, 15), date(2021, 10, 12), date(2021, 10, 16)])
 
-print(cal.scheduled_dates)
-print(rule.__dict__)
+if rule.day_offset > 0:
+  for item in cal.scheduled_dates:
+    current_offset = rule.day_offset
+    while current_offset > 0:
+      if item + timedelta(days=current_offset) not in cal.scheduled_dates:
+        cal.add(item + timedelta(days=current_offset))
+      if item - timedelta(days=current_offset) not in cal.scheduled_dates:
+        cal.add(item - timedelta(days=current_offset))
+      current_offset = current_offset - 1
+
+posts = 15
+current_date = date(2021, 10, 8)
+while posts > 0:
+  if current_date not in cal.scheduled_dates:
+    print(current_date)
+    posts = posts-rule.posts_per_day
+  current_date = current_date + timedelta(days=1)
+
+# print(cal.scheduled_dates)
+# print(rule.__dict__)
