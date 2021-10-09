@@ -45,28 +45,55 @@ class GeneratorRule():
         self.day_offset = day_offset
         self.posts_per_day = posts_per_day
 
-rule = GeneratorRule(posts_per_day=2, day_offset=1)
+class SchedulerGenerator():
+  def __init__(self, rules: GeneratorRule, calendar: Calendar, posts: int, start_date: date) -> None:
+    self.unavailable_dates = []
+    self.available_dates = []
+    self.rules = rules
+    self.calendar = calendar
+    self.posts = posts
+    self.start_date = start_date
+  
+  def add_unavailable(self, dates: list):
+    for item in dates:
+      if item not in self.unavailable_dates:
+        self.unavailable_dates.append(item)
+    self.sort() 
+    
+  def sort(self):
+    self.unavailable_dates = sorted(self.unavailable_dates)
+    
+  def get_unavailable_dates(self):
+    if self.rules.day_offset > 0:
+      for item in self.calendar.scheduled_dates:
+        current_offset = self.rules.day_offset
+        while current_offset > 0:
+          self.add_unavailable([
+            item, 
+            item + timedelta(days=current_offset), 
+            item - timedelta(days=current_offset)
+          ])
+          current_offset = current_offset - 1
+  
+  def get_available_dates(self):
+    self.get_unavailable_dates()
+    current_date = self.start_date
+    current_posts = self.posts
+    while current_posts > 0:
+      if current_date not in self.unavailable_dates:
+        print(current_date)
+        current_posts = current_posts - self.rules.posts_per_day
+      current_date = current_date + timedelta(days=1)
+
+
+rules = GeneratorRule(posts_per_day=2, day_offset=1)
 
 cal = Calendar()
-cal.add_many([date(2021, 10, 15), date(2021, 10, 12), date(2021, 10, 16)])
+cal.add_many([date(2021, 10, 12), date(2021, 10, 15), date(2021, 10, 20)])
 
-if rule.day_offset > 0:
-  for item in cal.scheduled_dates:
-    current_offset = rule.day_offset
-    while current_offset > 0:
-      if item + timedelta(days=current_offset) not in cal.scheduled_dates:
-        cal.add(item + timedelta(days=current_offset))
-      if item - timedelta(days=current_offset) not in cal.scheduled_dates:
-        cal.add(item - timedelta(days=current_offset))
-      current_offset = current_offset - 1
+scheduler = SchedulerGenerator(rules, cal, 15, date.today())
 
-posts = 15
-current_date = date(2021, 10, 8)
-while posts > 0:
-  if current_date not in cal.scheduled_dates:
-    print(current_date)
-    posts = posts-rule.posts_per_day
-  current_date = current_date + timedelta(days=1)
+scheduler.get_available_dates()
 
 # print(cal.scheduled_dates)
 # print(rule.__dict__)
