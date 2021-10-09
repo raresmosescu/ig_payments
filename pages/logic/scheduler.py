@@ -51,4 +51,5 @@ cal = Calendar()
 cal.add_many([date(2021, 10, 15), date(2021, 10, 12), date(2021, 10, 16)])
 
 print(cal.scheduled_dates)
+
 print(rule.__dict__)
