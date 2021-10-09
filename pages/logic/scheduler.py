@@ -1,7 +1,7 @@
 from datetime import datetime, date, time
 
 # handles scheduled times
-class Day():
+class TimeBlock():
     def __init__(self, date:date) -> None:
         self.scheduled_times = []
         self.date = date

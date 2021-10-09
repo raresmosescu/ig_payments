@@ -13,13 +13,14 @@ class PostList():
 		self.list.append(post)
 
 class Promotion():
-	def __init__(self, objective, pnum:list):
+	def __init__(self, objective, pnum:list, is_confirmed=False):
 		# pnum: list of tupls with placements and number of posts 
 		# e.g. [('story', 10), ('feed', 5)]
 		self.objective = objective
 		self.placements, self.numbers = zip(*pnum) # unzip the list 
 		# pnum = [('story', 10), ('feed', 5)] with * becomes ('story', 10), ('feed', 5)
 		self.pnum = pnum
+		self.is_confirmed = is_confirmed
 
 	def total(self):
 		for p, n in self.pnum:
@@ -124,20 +125,20 @@ class Pricing():
 		print('------------------------------')
 		print(f'TOTAL: ${total} (${total_discount} OFF)')
 
+if __name__ == '__main__':
+	prices = PriceList([
+		#     objective, placement, price per post, list with discounts / number of posts = [ (min number of posts, discount), ... ]
+		Price('sales', 'story', 25, [(0, 1), (5, 3)]), 
+		Price('sales', 'feed', 60, [(0, 1), (10, 3)]),
+		Price('growth', 'story', 25, [(0, 1), (5, 3)]),
+		Price('growth', 'feed', 20, [(0, 1), (5, 3)])
+		])
+	promo = Promotion(objective='sales', pnum=[('story', 10), ('feed', 5)])
 
-prices = PriceList([
-	#     objective, placement, price per post, list with discounts / number of posts = [ (min number of posts, discount), ... ]
-	Price('sales', 'story', 25, [(0, 1), (5, 3)]), 
-	Price('sales', 'feed', 60, [(0, 1), (10, 3)]),
-	Price('growth', 'story', 25, [(0, 1), (5, 3)]),
-	Price('growth', 'feed', 20, [(0, 1), (5, 3)])
-	])
-promo = Promotion(objective='sales', pnum=[('story', 10), ('feed', 5)])
+	p = Pricing(prices, promo)
+	p.add_promotion(promo)
 
-p = Pricing(prices, promo)
-p.add_promotion(promo)
+	# print(p.promotion_prices)
 
-# print(p.promotion_prices)
-
-print(p.describe_promo())
+	print(p.describe_promo())
 
