@@ -21,10 +21,17 @@ class Promotion():
 		# pnum = [('story', 10), ('feed', 5)] with * becomes ('story', 10), ('feed', 5)
 		self.pnum = pnum
 		self.is_confirmed = is_confirmed
+		self.datetimes = {
+			'feed': [],
+			'story': []
+		}
 
 	def total(self):
 		for p, n in self.pnum:
 			print(p,n)
+
+	# def add_datetimes():
+
 
 class Price():
 	def __init__(self, objective, placement, price_per_post, dnum):

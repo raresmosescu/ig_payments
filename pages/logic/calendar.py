@@ -1,5 +1,6 @@
 from datetime import datetime, date, time
 from promo_logic import Promotion
+from pprint import pprint
 
 # # handles scheduled times
 # class Day():
@@ -24,31 +25,57 @@ from promo_logic import Promotion
 # handles scheduled promotions and their datetimes
 class Calendar():
     def __init__(self) -> None:
-        self.scheduled_datetimes = []
+        self.scheduled_datetimes = {
+            'feed': [],
+            'story': []
+        }
         self.scheduled_promos = []
 
-    def add(self, datetime:datetime):
-        self.scheduled_datetimes.append(datetime)
-        self.sort()
-        
-    def add_many(self, datetimes:list):
-        self.scheduled_datetimes += datetimes
-        self.sort()
+    # adds a single date to a placement
+    def add(self, datetime:datetime, placement, auto_sort=True):
+        if self.is_unavailable(datetime, placement):
+            raise ValueError(f'Datetime "{datetime}" is not available for placement "{placement}".')
+        self.scheduled_datetimes[placement].append(datetime)
+        if auto_sort:
+            self.sort(placement)
+
+    # adds many dates to a placement
+    def add_many(self, datetimes:list, placement):
+        if placement not in ['story', 'feed']:
+            raise ValueError(f'Placement "{placement}" is not supported.')
+        for datetime in datetimes:
+            self.add(datetime, placement, auto_sort=False)
+        self.sort(placement)
     
-    def remove(self, datetime:datetime):
-        self.scheduled_datetimes.remove(datetime)
+    # removes a date from a placement
+    def remove(self, datetime:datetime, placement):
+        self.scheduled_datetimes[placement].remove(datetime)
 
-    def sort(self):
-        self.scheduled_datetimes = sorted(self.scheduled_datetimes)
+    # checks if a datetime is already used for a placement
+    def is_unavailable(self, datetime:datetime, placement):
+        if datetime in self.scheduled_datetimes[placement]:
+            return True
+        return False
 
+    # sorts the placement, if provided, else sorts all placements
+    def sort(self, placement=''):
+        if placement:
+            self.scheduled_datetimes[placement] = sorted(self.scheduled_datetimes[placement])
+        else:
+            self.scheduled_datetimes = {k:sorted(v) for k,v in self.scheduled_datetimes.items()}
+
+    # adds a Promotion object and processes it
     def add_promotion(self, promo:Promotion):
         self.scheduled_promos.append(promo)
-        self.add_many(self, promo.dt)
+        self.add_many(promo.datetimes['story'], 'story')
+        self.add_many(promo.datetimes['feed'], 'feed')
 
-    def get_unconfirmed(self):
+    # returns a list with all unconfirmed promotions
+    def get_unconfirmed_promos(self):
         return [p for p in self.scheduled_promos if not p.is_confirmed]
 
-    def get_confirmed(self):
+    # returns a list with all confirmed promotions
+    def get_confirmed_promos(self):
         return [p for p in self.scheduled_promos if p.is_confirmed]
 
 
@@ -56,9 +83,21 @@ class Calendar():
 # testing
 if __name__ == '__main__':
     cal = Calendar()
-    # cal.add_many([datetime(2021, 10, 15, 18, 0), datetime(2021, 10, 12, 18, 0), datetime(2021, 10, 16, 18, 0)])
-	# promo = 
 
-    promos = [Promotion(objective='sales', pnum=[('story', 10), ('feed', 5)])]
+    story_dates = [
+        datetime(2021,10,20,18,0), datetime(2021,10,20,15,0),
+        datetime(2021,10,21,18,0), datetime(2021,10,21,15,0)
+    ]
 
-    print(cal.scheduled_datetimes)
+    feed_dates = [
+        datetime(2021,11,20,18,0), datetime(2021,11,20,15,0),
+        datetime(2021,11,21,18,0), datetime(2021,11,21,15,0)
+    ]
+
+    p = Promotion(objective='sales', pnum=[('story', 4), ('feed', 4)])
+    p.datetimes['story'] = story_dates
+    p.datetimes['feed'] = feed_dates
+    cal.add_promotion(p)
+
+    pprint(cal.scheduled_datetimes)
+    pprint(cal.get_unconfirmed_promos())
