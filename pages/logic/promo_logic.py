@@ -75,6 +75,7 @@ class Pricing():
 			self.promotion = []
 		else:
 			self.promotion = promotion
+			self.calculate_prices(promotion)
 
 	def add_promotion(self, promo:Promotion):
 		self.promotion = promo
@@ -140,12 +141,12 @@ if __name__ == '__main__':
 		Price('growth', 'story', 25, [(0, 1), (5, 3)]),
 		Price('growth', 'feed', 20, [(0, 1), (5, 3)])
 		])
-	promo = Promotion(objective='sales', pnum=[('story', 10), ('feed', 5)])
+	p = Promotion(objective='sales', pnum=[('story', 10), ('feed', 5)])
 
-	p = Pricing(prices, promo)
-	p.add_promotion(promo)
+	pr = Pricing(prices, p)
+	# p.add_promotion(promo)
 
 	# print(p.promotion_prices)
 
-	print(p.describe_promo())
+	pr.describe_promo()
 

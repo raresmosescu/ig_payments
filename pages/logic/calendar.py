@@ -70,6 +70,9 @@ class Calendar():
         self.add_many(promo.datetimes['story'], 'story')
         self.add_many(promo.datetimes['feed'], 'feed')
 
+    def get_datetimes_by_placement(self, placement):
+        return self.scheduled_datetimes[placement]
+
     # returns a list with all unconfirmed promotions
     def get_unconfirmed_promos(self):
         return [p for p in self.scheduled_promos if not p.is_confirmed]
@@ -77,6 +80,16 @@ class Calendar():
     # returns a list with all confirmed promotions
     def get_confirmed_promos(self):
         return [p for p in self.scheduled_promos if p.is_confirmed]
+
+    def get_promo_num_for_date(self, dt1:datetime, placement:str):
+        c = 0
+        for dt2 in self.scheduled_datetimes[placement]:
+            if dt2.date() == dt1.date():
+                c+=1
+        return c
+
+
+
 
 
 
@@ -101,3 +114,5 @@ if __name__ == '__main__':
 
     pprint(cal.scheduled_datetimes)
     pprint(cal.get_unconfirmed_promos())
+
+    print(f'Total promos on date {datetime(2021,10,20).date()}: {cal.get_promo_num_for_date(datetime(2021,10,20), "story")}')
