@@ -111,7 +111,20 @@ WSGI_APPLICATION = 'ig_payments.wsgi.application'
 # [START db_setup]
 # [START gaestd_py_django_database_config]
 # Use django-environ to parse the connection string
-DATABASES = {"default": env.db()}
+DATABASES = {
+    # read os.environ['DATABASE_URL'] and raises
+    # ImproperlyConfigured exception if not found
+    #
+    # The db() method is an alias for db_url().
+    'default': env.db(),
+
+    # read os.environ['SQLITE_URL']
+    'extra': env.db_url(
+        'SQLITE_URL',
+        default='sqlite:////tmp/my-tmp-sqlite.db'
+    )
+}
+print(DATABASES)
 
 # If the flag as been set, configure to use proxy
 if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
