@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load utility_filters %}
+{% load static %}
+
+{% block body %}
+<div class="container">
+  <h1 class="seller-name text">Seller Name</h1>
+  <h6 class="ownership text">Ownership verified</h6>
+  <hr/>
+  <form method="post">
+    {% csrf_token %}
+    <h1 class="settings-title text">Settings</h1>
+    <div class="settings">
+      <div>
+        <p class="option text">Promotion Type</p>
+        <p class="option-description text">What is the goal of your promotion</p>
+        
+        <label class="radio-button" for="Growth">Growth</label>
+        <input type="radio" name="prom_type" value="Growth" id="Growth" checked>
+        
+        <label class="radio-button" for="Sales">Sales</label>
+        <input type="radio" name="prom_type" value="Sales" id="Sales">
+        
+        <label class="radio-button" for="Custom">Custom</label>
+        <input type="radio" name="prom_type" value="Custom" id="Custom">
+      </div>
+      <br>
+      <div>
+        <p class="option text">Posts Number</p>
+        <p class="option-description text">The number of i donno</p>
+        
+        <div>
+          <input name="posts_number" type="range" min="1" max="5" value="1" oninput="this.nextElementSibling.value = this.value">
+          <output>1</output>
+        </div>
+      </div>
+      <br>
+      <div>
+        <p class="option text">Date and hour</p>
+        <p class="option-description text">The time when your promo will be posted</p>
+        <input name="datetime" type="datetime-local">
+      </div>
+      <br>
+      <div>
+        <p class="option text">Images</p>
+        <p class="option-description text">Upload your images</p>
+        <input type="file" name="images" id="images" accept="image/png, image/jpeg" multiple>
+      </div>
+      <button id="btn" type="submit">Order</button>
+    </div>
+  </form>
+</div>
+<style>
+  .radio-button {
+    color: blue;
+  }
+  .option-description {
+    font-size: .9rem;
+  }
+  .container {
+    background: rgb(241, 241, 241);
+    width: 50%;
+    padding: 2em;
+  }
+  .seller-name {
+    font-size: 1.7rem;
+    margin: 0;
+  }
+  .ownership {
+    margin: 0;
+    top: -10px;
+    position: relative;
+  }
+  .text {
+    color: rgb(80, 131, 241);
+  }
+  .settings-title {
+    font-size: 1.5rem;
+  }
+  .settings {
+    margin-left: 1em;
+  }
+  .option {
+    font-size: 1.2rem;
+  }
+</style>
+
+{% endblock body %}

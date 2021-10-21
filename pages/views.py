@@ -24,3 +24,13 @@ def page_view(request):
     # print(sales_options)
     
     return render(request, 'page_view.html', context={'page':page_obj})
+  
+def promo_form(request): #
+  if request.method == 'POST':
+    data = request.POST
+    prom_type = data.get('prom_type')
+    posts_number = data.get('posts_number')
+    datetime = data.get('datetime')
+    images = data.get('images')
+    print(prom_type, posts_number, datetime, images)
+  return render(request, 'promo_form.html', context={})
